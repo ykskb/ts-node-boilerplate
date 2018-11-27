@@ -8,7 +8,8 @@ import methodOverride = require("method-override");
 
 import "reflect-metadata";
 
-import {IndexRoute} from "./routes/index"
+import {IndexRoute} from "./routes/admin/index";
+import {AuthRoute} from "./routes/admin/auth";
 
 /**
  * The server.
@@ -106,6 +107,7 @@ export class Server {
         router = express.Router();
 
         IndexRoute.create(router);
+        AuthRoute.create(router);
 
         this.app.use(router);
     }

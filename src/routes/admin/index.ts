@@ -20,9 +20,11 @@ export class IndexRoute extends BaseRoute {
         //log
         console.log("[IndexRoute::create] Creating index route.");
 
+        let indexRoute: IndexRoute = new IndexRoute;
+
         //add home page route
         router.get("/", (req: Request, res: Response, next: NextFunction) => {
-            new IndexRoute().index(req, res, next);
+            indexRoute.index(req, res, next);
         });
     }
 

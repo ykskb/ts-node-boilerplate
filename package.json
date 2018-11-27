@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "NODE_ENV=development nodemon ./bin/www",
     "grunt": "grunt",
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "migrate": "typeorm schema:sync"
   },
   "author": "Yohei",
   "license": "ISC",
@@ -22,7 +23,8 @@
     "pug": "^2.0.3",
     "reflect-metadata": "^0.1.12",
     "sequelize": "^4.41.2",
-    "typeorm": "^0.2.9"
+    "typeorm": "^0.2.9",
+    "validator": "^10.9.0"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.1",

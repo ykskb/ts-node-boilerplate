@@ -7,6 +7,6 @@ module.exports = {
     "password": process.env.DB_MYSQL_PASSWORD,
     "database": process.env.DB_MYSQL_DATABASE,
     "entities": [
-        "src/entities/**/*.ts"
+        "dist/entities/**/*.js"
     ]
 }

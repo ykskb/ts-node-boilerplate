@@ -1,0 +1,10 @@
+doctype html
+html(lang="en")
+  head
+    title= title
+  body
+    h1="Signin"
+    form(action="/signin" method="POST")
+        input(type="text" name="email" placeholder="email")
+        input(type="text" name="password" placeholder="password")
+        input(type="submit" value="Signin")
