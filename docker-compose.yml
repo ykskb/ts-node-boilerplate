@@ -1,0 +1,52 @@
+version: "3"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Application.Dockerfile
+      args:
+        IS_DEV_MODE: 1
+    env_file:
+      - docker/Application/env_files/main.env
+    volumes:
+      - ./:/var/www/app
+    network_mode: "service:web"
+    depends_on:
+      - mysql
+      - redis
+    tty: true
+
+  web:
+    build:
+      context: .
+      dockerfile: WebServer.Dockerfile
+    ports:
+      - "80:80"
+    networks: 
+      - mysql
+      - redis
+
+  redis:
+    image: redis
+    networks:
+      redis:
+        aliases:
+          - redis
+
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: proj_pass
+      MYSQL_DATABASE: proj
+    ports:
+      - 3306:3306
+    networks:
+      mysql:
+        aliases:
+          - mysql
+networks: 
+  mysql:
+    driver: bridge
+  redis:
+    driver: bridge
