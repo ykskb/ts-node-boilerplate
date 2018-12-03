@@ -8,8 +8,15 @@ import methodOverride = require("method-override");
 
 import "reflect-metadata";
 
-import {IndexRoute} from "./routes/admin/index";
-import {AuthRoute} from "./routes/admin/auth";
+import { ApiAcl } from "./middleware/api_acl";
+// import {WebAcl} from "./middleware/web_acl";
+
+import { IndexRoute } from "./routes/admin/index";
+import { AuthRoute as WebAuthRoute } from "./routes/admin/auth";
+import { AuthRoute as ApiAuthRoute } from "./routes/api/auth";
+import { UserRoute } from "./routes/api/users";
+import { createConnections } from "typeorm";
+import { UserSeeder } from "./database/seeds/UserSeeder";
 
 /**
  * The server.
@@ -40,19 +47,12 @@ export class Server {
      */
     constructor() {
         this.app = express();
-        this.config();
-        this.routes();
-        this.api();
-    }
-
-    /**
-     * Create REST API routes
-     *
-     * @class Server
-     * @method api
-     */
-    public api() {
-        //empty for now
+        createConnections().then(async connection => {
+            this.config();
+            this.routes();
+            this.api();
+            this.error();
+        })
     }
 
     /**
@@ -85,15 +85,6 @@ export class Server {
 
         //use override middlware
         this.app.use(methodOverride());
-
-        //catch 404 and forward to error handler
-        this.app.use(function (err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
-            err.status = 404;
-            next(err);
-        });
-
-        //error handling
-        this.app.use(errorHandler());
     }
 
     /**
@@ -103,12 +94,45 @@ export class Server {
      * @method api
      */
     public routes() {
+
         let router: express.Router;
         router = express.Router();
 
         IndexRoute.create(router);
-        AuthRoute.create(router);
+        WebAuthRoute.create(router);
+
+        // let webAcl: WebAcl = new WebAcl;
+        let apiAcl: ApiAcl = new ApiAcl();
+        ApiAuthRoute.create(router, apiAcl);
+        UserRoute.create(router, apiAcl);
 
         this.app.use(router);
+    }
+
+    /**
+     * Create REST API routes
+     *
+     * @class Server
+     * @method api
+     */
+    public api() {
+        //empty for now
+    }
+
+    public error() {
+        // catch 404 and forward to error handler
+        this.app.use(function async (err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
+            console.log('coming to error.');
+            if (res.headersSent) {
+                console.log('header sent.');
+                return next(err);
+            }
+            res.status(500);
+            res.json(JSON.stringify(err));
+            throw err;
+        });
+
+        // error handling
+        this.app.use(errorHandler());
     }
 }

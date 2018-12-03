@@ -10,7 +10,6 @@ import validator from "validator"
 export class AuthRoute extends BaseRoute {
 
     public static create(router: Router) {
-        //log
         console.log("[IndexRoute::create] Creating auth route.");
 
         let authRoute: AuthRoute = new AuthRoute;
