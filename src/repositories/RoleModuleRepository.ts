@@ -13,11 +13,12 @@ export class RoleModuleRepository {
     }
 
     public async createMany(role: Role, modules: Array<string>) {
-        for (var m in modules) {
+        console.log(modules);
+        for (var i = 0; i < modules.length; i++) {
             let roleModule: RoleModule = new RoleModule();
             roleModule.role = role;
-            roleModule.module = m;
-            this.repo.save(roleModule);
+            roleModule.module = modules[i];
+            await this.repo.save(roleModule);
         }
     }
 }

@@ -12,15 +12,18 @@ export class UserRepository {
     }
 
     public async create(data: Object, role: Role) {
-        bcrypt.hash(data["password"], 10, (err, hash) => {
-            let user = new User;
-            user.email = data["email"];
-            user.username = data["username"];
-            user.password = hash;
-            user.phone_number = data["phone_number"];
-            user.role = role;
-            this.repo.save(user);
+        let hashPromise = new Promise((resolve, reject) => {
+            bcrypt.hash(data["password"], 10, async (err, hash) => {
+                let user = new User;
+                user.email = data["email"];
+                user.username = data["username"];
+                user.password = hash;
+                user.phone_number = data["phone_number"];
+                user.role = role;
+                resolve(await this.repo.save(user));
+            });
         });
+        await hashPromise.then(result => {return result;});
     }
 
     public async getFirstByUsername(username: string, load: Array<string> = []) {

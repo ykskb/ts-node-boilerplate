@@ -8,7 +8,7 @@
     "dev": "NODE_ENV=development nodemon ./bin/www",
     "grunt": "grunt",
     "start": "node ./bin/www",
-    "migrate": "typeorm schema:sync",
+    "migrate-mysql": "./node_modules/.bin/typeorm migration:run -c mysql",
     "seed": "ts-node --transpileOnly './bin/seed.ts'"
   },
   "author": "Yohei",

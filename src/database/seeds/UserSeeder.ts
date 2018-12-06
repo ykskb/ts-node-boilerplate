@@ -5,6 +5,7 @@ import { UserRepository } from '../../repositories/UserRepository';
 import { RoleRepository } from '../../repositories/RoleRepository';
 import { RoleModuleRepository } from '../../repositories/RoleModuleRepository';
 import { Role } from '../../entities/Role';
+import { getConnection, createConnections } from 'typeorm';
 
 
 export class UserSeeder implements Seed {
@@ -20,16 +21,14 @@ export class UserSeeder implements Seed {
     }
 
     public async seed(factory: Factory, connection: Connection): Promise<any> {
-        //await factory(User)().seedMany(10);
-
         let role = new Role();
         role.name = "Full Admin";
 
         let modules = ["end-user"];
 
         const savedRole = await this.roleRepo.createAndReturn(role);
-        this.roleModuleRepo.createMany(savedRole, modules);
-        
+        await this.roleModuleRepo.createMany(savedRole, modules);
+
         await this.userRepo.create(
             {
                 "email": "full@admin.com",

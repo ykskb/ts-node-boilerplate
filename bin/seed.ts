@@ -59,8 +59,8 @@ const run = async () => {
     // Get database connection and pass it to the seeder
     try {
         await createConnections().then(async connection => {
-            seedLoop(seedFiles);
-        });
+            await seedLoop(seedFiles);
+        }); 
     } catch (error) {
         return handleError(error);
     }    

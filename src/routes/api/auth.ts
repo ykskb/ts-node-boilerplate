@@ -43,7 +43,7 @@ export class AuthRoute extends BaseRoute {
                 });
             });
             return await comparePromise.then(result => { return res.json({ token: result }).end(); })
-                .catch(error => { return res.status(401).json({ 'errors': ['Username and password do not matcha.'] }).end(); });
+                .catch(error => { return res.status(401).json({ 'errors': ['Username and password do not match.'] }).end(); });
         }
         return res.status(401).json({ 'errors': ['Username and password do not match.'] }).end()
     }

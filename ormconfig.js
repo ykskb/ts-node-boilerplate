@@ -12,10 +12,10 @@ module.exports = [
             "dist/entities/**/*.js"
         ],
         "migrations": [
-            "dist/database/migrations/**/*.ts"
+            "dist/database/migrations/**/*.js"
         ],
         "factories": [
-            "dist/database/factories/**/*.ts"
+            "dist/database/factories/**/*.js"
         ]
     }
 ]

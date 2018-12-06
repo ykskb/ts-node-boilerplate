@@ -28,3 +28,8 @@ npm start
 npm run dev
 ```
 
+##### Migrate MySql
+
+```
+npm run migrate-mysql
+```
