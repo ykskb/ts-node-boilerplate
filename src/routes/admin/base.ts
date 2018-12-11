@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { WebAcl } from "../../middleware/web_acl";
 
 /**
  * Constructor
@@ -18,9 +19,16 @@ export class BaseRoute {
      * @constructor
      */
     constructor() {
-        //initialize variables
-        this.title = "Tour of Heros";
+        this.title = "Project";
         this.scripts = [];
+    }
+
+    static wrapAsync(func) {
+        return (req, res, next) => {
+            func(req, res, next)
+                .then(() => next)
+                .catch(err => next(err))
+        }
     }
 
     /**

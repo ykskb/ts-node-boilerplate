@@ -1,8 +1,8 @@
 import { getConnectionManager, getManager, Repository, createConnections } from "typeorm";
-import { User } from "../entities/User";
-import * as bcrypt from "bcryptjs"
 import { Role } from "../entities/Role";
+import {Service} from "typedi";
 
+@Service()
 export class RoleRepository {
 
     protected repo: Repository<Role>;

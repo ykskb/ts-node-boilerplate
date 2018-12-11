@@ -16,7 +16,8 @@ import { AuthRoute as WebAuthRoute } from "./routes/admin/auth";
 import { AuthRoute as ApiAuthRoute } from "./routes/api/auth";
 import { UserRoute } from "./routes/api/users";
 import { createConnections } from "typeorm";
-import { UserSeeder } from "./database/seeds/UserSeeder";
+import {Container} from "typedi";
+import { WebAcl } from "./middleware/web_acl";
 
 /**
  * The server.
@@ -98,11 +99,13 @@ export class Server {
         let router: express.Router;
         router = express.Router();
 
-        IndexRoute.create(router);
-        WebAuthRoute.create(router);
+        const webAcl = Container.get(WebAcl)
 
-        // let webAcl: WebAcl = new WebAcl;
-        let apiAcl: ApiAcl = new ApiAcl();
+        IndexRoute.create(router, webAcl);
+        WebAuthRoute.create(router, webAcl);
+
+        let apiAcl: ApiAcl = Container.get(ApiAcl);
+        
         ApiAuthRoute.create(router, apiAcl);
         UserRoute.create(router, apiAcl);
 
@@ -122,9 +125,7 @@ export class Server {
     public error() {
         // catch 404 and forward to error handler
         this.app.use(function async (err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
-            console.log('coming to error.');
             if (res.headersSent) {
-                console.log('header sent.');
                 return next(err);
             }
             res.status(500);
