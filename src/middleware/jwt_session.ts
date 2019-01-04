@@ -3,7 +3,7 @@ import * as jwt from "jsonwebtoken"
 import * as uuid from "uuid/v4"
 import Container, { Service } from "typedi"
 import * as circularJson from "circular-json"
-import {authConfig} from "../config/auth"
+import { authConfig } from "../config/auth"
 import { redisClientProvider } from "../providers/redis";
 import { RedisClient, createClient } from "redis";
 
@@ -71,7 +71,6 @@ export default class JwtRedisSessionHandler {
                         req[this.options.sessionKey].claims = decoded
                         req[this.options.sessionKey].id = decoded.jti
                         req[this.options.sessionKey].jwt = token
-                        // Update the TTL
                         req[this.options.sessionKey].touch(_.noop)
                         return resolve()
                     })
@@ -100,7 +99,7 @@ class JwtRedisSession {
             callback = claims
             claims = {}
         }
-        const self = this, sid = uuid()
+        const sid = uuid()
         const token = jwt.sign(_.extend({ jti: sid }, claims || {}), this.options.secret, { algorithm: this.options.algorithm })
         this.sessionId = sid
         const redisClient = Container.get(redisClientProvider).provide()
@@ -144,7 +143,7 @@ class JwtRedisSession {
             } catch (e) {
                 return callback(e)
             }
-            this.extendSession(self, resp)
+            this.extendSession(this, resp)
             callback()
         })
     }

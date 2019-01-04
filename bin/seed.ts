@@ -60,10 +60,10 @@ const run = async () => {
     try {
         await createConnections().then(async connection => {
             await seedLoop(seedFiles);
-        }); 
+        });
     } catch (error) {
         return handleError(error);
-    }    
+    }
 
     log('\n👍 ', chalk.gray.underline(`finished seeding`));
     process.exit(0);

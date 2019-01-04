@@ -1,7 +1,7 @@
 import { getConnectionManager, getManager, Repository, createConnections } from "typeorm"
-import { User } from "../entities/User"
+import { User } from "../entities/sql/User"
 import * as bcrypt from "bcryptjs"
-import { Role } from "../entities/Role"
+import { Role } from "../entities/sql/Role"
 import { Service } from "typedi"
 
 @Service()
@@ -25,18 +25,14 @@ export class UserRepository {
                 resolve(await this.repo.save(user))
             })
         })
-        await hashPromise.then(result => {return result}).catch(error => { throw error })
+        await hashPromise.then(result => { return result }).catch(error => { throw error })
     }
 
     public async getFirstByUsername(username: string, load: Array<string> = []) {
-        try {
-            return this.repo.createQueryBuilder("user")
+        return this.repo.createQueryBuilder("user")
             .where("username = :usernameVal", { usernameVal: username })
             .innerJoinAndSelect("user.role", "role")
             .leftJoinAndSelect("role.role_modules", "modules")
             .getOne()
-        } catch (error) {
-            throw error
-        }        
     }
 }

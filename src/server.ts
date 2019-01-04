@@ -16,7 +16,7 @@ import { AuthRoute as WebAuthRoute } from "./routes/admin/auth";
 import { AuthRoute as ApiAuthRoute } from "./routes/api/auth";
 import { UserRoute } from "./routes/api/users";
 import { createConnections } from "typeorm";
-import {Container} from "typedi";
+import { Container } from "typedi";
 import { WebAcl } from "./middleware/web_acl";
 
 /**
@@ -36,7 +36,8 @@ export class Server {
      * @static
      * @return {ng.auto.IInjectorService} Returns the newly created injector for this app.
      */
-    public static bootstrap(): Server {
+    public static async bootstrap() {
+        await createConnections()
         return new Server();
     }
 
@@ -48,12 +49,10 @@ export class Server {
      */
     constructor() {
         this.app = express();
-        createConnections().then(async connection => {
-            this.config();
-            this.routes();
-            this.api();
-            this.error();
-        })
+        this.config();
+        this.routes();
+        this.api();
+        this.error();
     }
 
     /**
@@ -105,7 +104,7 @@ export class Server {
         WebAuthRoute.create(router, webAcl);
 
         let apiAcl: ApiAcl = Container.get(ApiAcl);
-        
+
         ApiAuthRoute.create(router, apiAcl);
         UserRoute.create(router, apiAcl);
 
@@ -124,7 +123,7 @@ export class Server {
 
     public error() {
         // catch 404 and forward to error handler
-        this.app.use(function async (err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
+        this.app.use(function async(err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
             if (res.headersSent) {
                 return next(err);
             }

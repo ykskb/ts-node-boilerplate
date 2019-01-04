@@ -1,7 +1,7 @@
 import JwtRedisSessionHandler from "../middleware/jwt_session";
 import { Service, Container } from "typedi";
 import { redisClientProvider } from "./redis";
-import { authConfig } from "../../dist/config/auth";
+import { authConfig } from "../config/auth";
 
 @Service()
 export class JwtRedisSessionHandlerProvider {

@@ -21,14 +21,18 @@ export class AuthRoute extends BaseRoute {
 
         let authRoute: AuthRoute = Container.get(AuthRoute)
 
-        router.post(this.authPath, this.wrapAsync(acl.execute([])), this.wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
-            await authRoute.post(req, res, next)
-        }))
+        router.post(
+            this.authPath,
+            this.wrapAsyncRequestHandler(acl.execute([])),
+            this.wrapAsyncRequestHandler(async (req: Request, res: Response, next: NextFunction) => {
+                await authRoute.post(req, res, next)
+            })
+        )
     }
 
     public async post(req: Request, res: Response, next: NextFunction) {
 
-        const user = await this.userRepo.getFirstByUsername(req.body.username)
+        const user = await this.userRepo.getFirstByUsername(req.body.username).catch(e => {throw e})
 
         if (user) {
             let comparePromise = new Promise((resolve, reject) => {

@@ -8,33 +8,25 @@ var http = require("http");
 
 //create http server
 var httpPort = normalizePort(process.env.PORT || 8080);
-var app = server.Server.bootstrap().app;
-app.set("port", httpPort);
-var httpServer = http.createServer(app);
+var httpServer;
 
-//listen on provided ports
-httpServer.listen(httpPort);
+server.Server.bootstrap().then((server) => {
+  var app = server.app
+  app.set("port", httpPort);
+  httpServer = http.createServer(app);
+  httpServer.listen(httpPort);
+  httpServer.on("error", onError);
+  httpServer.on("listening", onListening);
+});
 
-//add error handler
-httpServer.on("error", onError);
-
-//start listening on port
-httpServer.on("listening", onListening);
-
-
-/**
- * Normalize a port into a number, string, or false.
- */
 function normalizePort(val) {
   var port = parseInt(val, 10);
 
   if (isNaN(port)) {
-    // named pipe
     return val;
   }
 
   if (port >= 0) {
-    // port number
     return port;
   }
 

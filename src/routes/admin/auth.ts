@@ -36,17 +36,29 @@ export class AuthRoute extends BaseRoute {
 
         let authRoute: AuthRoute = Container.get(AuthRoute)
 
-        router.get(this.signinPath, this.wrapAsync(acl.execute([])), (req: Request, res: Response, next: NextFunction) => {
-            authRoute.get(req, res, next)
-        })
+        router.get(
+            this.signinPath, 
+            this.wrapAsyncRequestHandler(acl.execute([])), 
+            (req: Request, res: Response, next: NextFunction) => {
+                authRoute.get(req, res, next)
+            }
+        )
+        
+        router.post(
+            this.signinPath,
+            this.wrapAsyncRequestHandler(acl.execute([])),
+            this.wrapAsyncRequestHandler(async (req: Request, res: Response, next: NextFunction) => {
+                authRoute.post(req, res, next)
+            })
+        )
 
-        router.post(this.signinPath, this.wrapAsync(acl.execute([])), this.wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
-            authRoute.post(req, res, next)
-        }))
-
-        router.get(this.logoutPath, this.wrapAsync(acl.execute([])), this.wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
-            authRoute.logout(req, res, next)
-        }))
+        router.get(
+            this.logoutPath,
+            this.wrapAsyncRequestHandler(acl.execute([])),
+            this.wrapAsyncRequestHandler(async (req: Request, res: Response, next: NextFunction) => {
+                authRoute.logout(req, res, next)
+            })
+        )
     }
 
     /**
@@ -56,7 +68,6 @@ export class AuthRoute extends BaseRoute {
      * @param next 
      */
     public get(req: Request, res: Response, next: NextFunction) {
-
         if (req[WebAcl.sessionKey].user) {
             res.redirect(IndexRoute.indexPath)
         }
@@ -71,12 +82,11 @@ export class AuthRoute extends BaseRoute {
     }
 
     public async post(req: Request, res: Response, next: NextFunction) {
-
         if (req[WebAcl.sessionKey].user) {
             res.redirect(IndexRoute.indexPath)
         }
 
-        const user = await this.userRepo.getFirstByUsername(req.body.username)
+        const user = await this.userRepo.getFirstByUsername(req.body.username).catch((e) => {throw e})
 
         if (user) {
             let comparePromise = new Promise((resolve, reject) => {

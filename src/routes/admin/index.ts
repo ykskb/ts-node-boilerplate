@@ -2,6 +2,8 @@ import { NextFunction, Request, Response, Router } from "express";
 import { BaseRoute } from "./base";
 import { WebAcl } from "../../middleware/web_acl";
 import { AuthRoute } from "./auth";
+import Container from "typedi";
+import { appConfig } from "../../config/app";
 
 
 /**
@@ -24,11 +26,15 @@ export class IndexRoute extends BaseRoute {
 
         console.log("[IndexRoute::create] Creating index route.");
 
-        let indexRoute: IndexRoute = new IndexRoute;
+        let indexRoute: IndexRoute = Container.get(IndexRoute);
 
-        router.get(IndexRoute.indexPath, this.wrapAsync(acl.execute(['end-user'])), this.wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
-            indexRoute.index(req, res, next);
-        }));
+        router.get(
+            IndexRoute.indexPath,
+            this.wrapAsyncRequestHandler(acl.execute([appConfig.accessModules.adminIndex])),
+            this.wrapAsyncRequestHandler(async (req: Request, res: Response, next: NextFunction) => {
+                indexRoute.index(req, res, next);
+            })
+        );
     }
 
     /**

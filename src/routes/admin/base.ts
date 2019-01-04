@@ -23,7 +23,7 @@ export class BaseRoute {
         this.scripts = [];
     }
 
-    static wrapAsync(func) {
+    static wrapAsyncRequestHandler(func) {
         return (req, res, next) => {
             func(req, res, next)
                 .then(() => next)

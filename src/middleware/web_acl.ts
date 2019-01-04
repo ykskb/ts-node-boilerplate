@@ -3,7 +3,7 @@ import JwtRedisSessionHandler from "./jwt_session"
 import Container, { Service } from "typedi"
 import { AuthRoute } from "../routes/admin/auth";
 import { JwtRedisSessionHandlerProvider } from "../providers/jwt";
-import { authConfig } from "../../dist/config/auth";
+import { authConfig } from "../config/auth";
 
 @Service()
 export class WebAcl {

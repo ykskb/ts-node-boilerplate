@@ -1,7 +1,7 @@
 import { getConnectionManager, getManager, Repository, createConnections } from "typeorm";
-import { Role } from "../entities/Role";
-import { RoleModule } from "../entities/RoleModule";
-import {Service} from "typedi";
+import { Role } from "../entities/sql/Role";
+import { RoleModule } from "../entities/sql/RoleModule";
+import { Service } from "typedi";
 
 @Service()
 export class RoleModuleRepository {

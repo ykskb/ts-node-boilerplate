@@ -1,11 +1,12 @@
 import { Factory, Seed } from 'typeorm-seeding'
 import { Connection } from 'typeorm/connection/Connection'
-import { User } from '../../entities/User'
+import { User } from '../../entities/sql/User'
 import { UserRepository } from '../../repositories/UserRepository'
 import { RoleRepository } from '../../repositories/RoleRepository'
 import { RoleModuleRepository } from '../../repositories/RoleModuleRepository'
-import { Role } from '../../entities/Role'
+import { Role } from '../../entities/sql/Role'
 import { getConnection, createConnections } from 'typeorm'
+import { appConfig } from '../../config/app';
 
 
 export class UserSeeder implements Seed {
@@ -25,7 +26,7 @@ export class UserSeeder implements Seed {
         adminRole.name = "Full Admin"
 
         const savedAdminRole = await this.roleRepo.createAndReturn(adminRole)
-        await this.roleModuleRepo.createMany(savedAdminRole, ["admin-index"])
+        await this.roleModuleRepo.createMany(savedAdminRole, [appConfig.accessModules.adminIndex])
 
         await this.userRepo.create(
             {
@@ -41,7 +42,7 @@ export class UserSeeder implements Seed {
         endUserRole.name = "End User"
 
         const savedEndUserRole = await this.roleRepo.createAndReturn(endUserRole)
-        await this.roleModuleRepo.createMany(savedEndUserRole, ["end-user"])
+        await this.roleModuleRepo.createMany(savedEndUserRole, [appConfig.accessModules.endUser])
 
         await this.userRepo.create(
             {
