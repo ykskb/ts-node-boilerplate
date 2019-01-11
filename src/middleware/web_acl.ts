@@ -20,7 +20,7 @@ export class WebAcl {
     public execute(requiredModules: Array<string>): Function {
         return async (req: Request, res: Response, next: NextFunction) => {
             await this.jwtRedisSessionHandler.processReq(req)
-            if (!req.hasOwnProperty(WebAcl.sessionKey)) {
+            if (req.path != AuthRoute.signinPath && !req[WebAcl.sessionKey].user) {
                 return res.redirect(AuthRoute.signinPath + "?error=not-authenticated")
             }
             if (requiredModules.length < 1) {

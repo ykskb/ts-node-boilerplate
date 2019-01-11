@@ -45,14 +45,21 @@ module.exports = function (grunt) {
                 files: ["views/**/*.pug"],
                 tasks: ["copy"]
             }
+        },
+        clean: {
+            dist: {
+                src: ["dist/**/*"]
+            }
         }
     });
 
     grunt.loadNpmTasks("grunt-contrib-copy");
     grunt.loadNpmTasks("grunt-contrib-watch");
+    grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks("grunt-ts");
 
     grunt.registerTask("default", [
+        "clean",
         "copy",
         "ts"
     ]);

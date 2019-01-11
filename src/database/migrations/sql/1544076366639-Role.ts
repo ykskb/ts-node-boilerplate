@@ -1,4 +1,4 @@
-import {MigrationInterface, QueryRunner, Table, TableForeignKey} from "typeorm";
+import { MigrationInterface, QueryRunner, Table, TableForeignKey } from "typeorm";
 
 export class Role1544076366639 implements MigrationInterface {
 
@@ -11,7 +11,9 @@ export class Role1544076366639 implements MigrationInterface {
                     type: 'int',
                     isPrimary: true,
                     isNullable: false,
-                    unsigned: true
+                    unsigned: true,
+                    isGenerated: true,
+                    generationStrategy: 'increment'
                 }, {
                     name: 'name',
                     type: 'varchar',

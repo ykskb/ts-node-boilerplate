@@ -1,7 +1,8 @@
-import { NextFunction, Request, Response, RequestHandler } from "express"   
+import { NextFunction, Request, Response, RequestHandler } from "express"
 import JwtRedisSessionHandler from "./jwt_session"
 import { Service, Container } from "typedi"
 import { JwtRedisSessionHandlerProvider } from "../providers/jwt";
+import { AuthRoute } from "../routes/api/auth";
 
 @Service()
 export class ApiAcl {
@@ -19,7 +20,7 @@ export class ApiAcl {
     public execute(requiredModules: Array<string>): Function {
         return async (req: Request, res: Response, next: NextFunction) => {
             await this.jwtRedisSessionHandler.processReq(req)
-            if (!req.hasOwnProperty(ApiAcl.sessionKey)) {
+            if (req.path != AuthRoute.authPath && !req[ApiAcl.sessionKey].user) {
                 return res.status(401).json({ 'errors': ['Not authenticated.'] }).end()
             }
             if (requiredModules.length < 1) {
