@@ -84,3 +84,5 @@ dist/**/*.pug
 
 # type script cache
 .tscache/*
+
+.DS_Store
