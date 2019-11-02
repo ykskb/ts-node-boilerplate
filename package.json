@@ -44,7 +44,7 @@
     "pug": "^2.0.3",
     "redis": "^2.8.0",
     "reflect-metadata": "^0.1.12",
-    "sequelize": "^4.41.2",
+    "sequelize": "^5.15.1",
     "typedi": "^0.8.0",
     "typeorm": "^0.2.9",
     "typeorm-seeding": "^1.0.0-beta.6",
